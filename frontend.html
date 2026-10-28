@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Q15. AI Tutor Safeguards Optimizer | LearnLoop</title>
+<style>
+:root{--bg:#f2f5f4;--p:#fff;--ink:#17252a;--mu:#5f7170;--ac:#1b6b66;--up:#1b6b66;--dn:#c0392b;--ln:#d5dedc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1718;--p:#172324;--ink:#e6efee;--mu:#93a8a6;--ac:#4fc0b6;--up:#4fc0b6;--dn:#ff7b68;--ln:#2a3b3c}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px}h1{font:600 26px/1.2 Georgia,serif;margin:0 0 6px}
+.sub{color:var(--mu);margin:0 0 18px;max-width:70ch}.card{background:var(--p);border:1px solid var(--ln);border-radius:8px;padding:16px;margin-bottom:16px}
+.card h2{margin:0 0 10px;font-size:15px}.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.ctl label{display:flex;flex-direction:column;gap:4px;color:var(--mu)}.ctl b{color:var(--ink)}input[type=range]{width:100%}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.kpi div{background:var(--p);border:1px solid var(--ln);border-radius:8px;padding:12px}.kpi span{display:block;color:var(--mu);font-size:13px}
+.kpi strong{font:600 22px/1.2 Georgia,serif}.pos{color:var(--up)}.neg{color:var(--dn)}
+.row{display:grid;grid-template-columns:130px 1fr 130px;gap:10px;align-items:center;margin:8px 0}.pair{display:grid;gap:3px}
+.t{height:11px;background:var(--bg);border-radius:3px;overflow:hidden}.f{height:100%}.f.a{background:var(--mu)}.f.b{background:var(--ac)}
+.lg{display:flex;gap:16px;color:var(--mu);font-size:13px;margin-bottom:6px}.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%}th,td{padding:6px 8px;text-align:right;border-bottom:1px solid var(--ln);white-space:nowrap}th:first-child,td:first-child{text-align:left}
+th{color:var(--mu);font-size:13px}td input{width:90px;text-align:right;background:var(--bg);color:var(--ink);border:1px solid var(--ln);border-radius:4px;padding:3px 5px;font:inherit}
+ul{margin:0;padding-left:20px}li{margin:5px 0}.note{color:var(--mu);font-size:13px}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:8px 14px;font:inherit;cursor:pointer;margin-top:8px}
+.badge{display:inline-block;background:var(--ac);color:#fff;border-radius:10px;padding:2px 10px;font-size:13px}
+@media(max-width:600px){main{padding:16px}.row{grid-template-columns:90px 1fr 90px}}
+</style></head><body><main>
+<h1>AI Tutor Safeguards Optimizer<br><span class="badge">LearnLoop</span></h1>
+<p class="sub">Question 15: LearnLoop gives students aged 10–16 an AI tutor that logs performance and chats. This tool splits a safeguard budget across consent, filters, moderation, privacy and audits.</p>
+<div class="card"><h2>AI Optimizer</h2><p class="note"><b>LearnLoop.</b> Simulated data; not LearnLoop’s actual figures. Replace with your own numbers.</p><div id="optout"></div><button class="btn" id="optbtn">Apply best settings</button></div>
+<div class="card"><h2>Constraints</h2><div class="ctl"><label><span id="l1"></span> <b id="v1"></b><input id="s1" type="range"></label><label id="w2" hidden><span id="l2">Max share of budget per option</span> <b id="v2"></b><input id="s2" type="range" min="20" max="100" value="100"></label></div></div>
+<div class="kpi" id="kpi"></div>
+<div class="card"><h2>Current vs recommended</h2><div class="lg"><span>Grey: baseline</span><span>Teal: recommended</span></div><div id="chart"></div></div>
+<div class="card"><h2>What to do</h2><ul id="acts"></ul></div>
+<div class="card tw"><h2>Inputs (edit any number to test your own)</h2><table id="tbl"></table></div>
+<p class="note" id="how"></p>
+</main>
+<script>
+const CFG={"eng": "C", "bud": 100, "unit": "₹ lakh", "uc": 1, "opts": [["Parental consent & age check", 300, 20, 1], ["Content safety filters", 250, 25, 1], ["Human moderation", 200, 40, 1], ["Data minimisation", 220, 30, 1], ["Bias & pedagogy audit", 100, 15, 1]], "tip": "Children’s data needs verifiable parental consent and no profiling; the EU AI Act treats education as high-risk."};
+const $=id=>document.getElementById(id),f0=n=>Math.round(n).toLocaleString('en-IN'),f2=n=>(+n).toFixed(2),E=CFG.eng,pc=(a,b)=>((a/b-1)*100).toFixed(1)+'%';
+const erf=x=>{const s=Math.sign(x);x=Math.abs(x);const t=1/(1+.3275911*x);return s*(1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x))},Phi=x=>.5*(1+erf(x/Math.SQRT2));
+const AL=h=>['Volume / month','% truly positive','Model separation d′ (0.5 weak … 3 strong)','Cost of wrong “'+h[0]+'” ₹','Cost of wrong “'+h[1]+'” ₹','Human review cost ₹ each'];
+const BL=['Volume / month','Mean item amount ₹','AI error rate %','Loss when AI errs, % of amount','Human handling cost ₹ / item','AI handling cost ₹ / item'];
+const DL=['Unit cost ₹','Reference price ₹','Demand at reference','Price elasticity (>1)'];
+const V=CFG.v?[...CFG.v]:null,O=CFG.opts?CFG.opts.map(r=>[...r]):null;
+const SL={A:['Human review capacity (% of '+(V?f0(V[6]):'')+' reviews/mo)',10,200,100],B:['Loss tolerance (% of ₹'+(V?f0(V[6]):'')+'/mo)',10,300,100],C:['Total budget (% of '+CFG.bud+' '+(CFG.unit||'')+')',50,200,100],D:['Fairness band ± %',0,40,V?V[4]:10]}[E];
+$('l1').textContent=SL[0];$('s1').min=SL[1];$('s1').max=SL[2];$('s1').value=SL[3];if(E=='C')$('w2').hidden=false;
+$('how').textContent='Method: '+{A:'all (low, high) score cut-offs are searched; items above high are auto-actioned, below low auto-opposite, and the band between goes to a human. The cheapest pair within review capacity wins. Scores are modelled as N(0,1) for negatives and N(d′,1) for positives.',B:'items up to a cap are handled by AI, larger ones by humans. Cost = AI + human handling + expected error loss (amounts ~ exponential). The cheapest cap whose expected loss stays within tolerance wins.',C:'value = ceiling × (1 − e^(−spend/scale)) × value per unit. Budget is added in small steps to the option with the highest marginal return, within the share limit.',D:'demand = D0 × (price/ref)^(−elasticity); profit is maximised over prices within ± the fairness band of the reference price.'}[E]+' Numbers are sample data, not a forecast.';
+function A(v,cap){const[N,p,d,cFP,cFN,r]=v,pp=p/100;let b=null,s=null;
+for(let tl=-3;tl<=d+3;tl+=.05)for(let th=tl;th<=d+3;th+=.05){const fn=pp*Phi(tl-d),fp=(1-pp)*(1-Phi(th)),rv=pp*(Phi(th-d)-Phi(tl-d))+(1-pp)*(Phi(th)-Phi(tl));
+if(N*rv>cap+1e-9)continue;const c=N*(cFN*fn+cFP*fp+r*rv),o={tl,th,c,w:N*(fn+fp),rv:N*rv,hi:N*(pp*(1-Phi(th-d))+(1-pp)*(1-Phi(th))),lo:N*(pp*Phi(tl-d)+(1-pp)*Phi(tl))};
+if(!b||c<b.c)b=o;if(th==tl&&(!s||c<s.c))s=o}return{b,s}}
+function B(v,tol){const[N,m,e,f,h,a]=v,Er=e/100,F=f/100;let b=null;
+for(let i=0;i<=2000;i++){const L=i*m*10/2000,q=Math.exp(-L/m),loss=N*Er*F*(m-(L+m)*q),c=N*((1-q)*a+q*h)+loss;if(loss<=tol&&(!b||c<b.c))b={L,sh:1-q,loss,c}}
+return{b,allH:N*h,allA:N*a+N*Er*F*m,lossA:N*Er*F*m}}
+function C(Bd,share){const x=O.map(_=>0),st=Bd/3000,fx=(o,s)=>o[1]*(1-Math.exp(-s/o[2]))*o[3];
+for(let k=0;k<3000;k++){let bi=-1,bg=-1;O.forEach((o,i)=>{if(x[i]+st<=Bd*share+1e-9){const g=fx(o,x[i]+st)-fx(o,x[i]);if(g>bg){bg=g;bi=i}}});if(bi<0)break;x[bi]+=st}
+return{x,T:O.reduce((s,o,i)=>s+fx(o,x[i]),0),Q:O.reduce((s,o)=>s+fx(o,Bd/O.length),0),fx}}
+function D(v,g){const[c,p0,D0,el]=v,pr=x=>(x-c)*D0*Math.pow(x/p0,-el),lo=p0*(1-g/100),hi=p0*(1+g/100);let bp=lo;
+for(let i=0;i<=500;i++){const x=lo+(hi-lo)*i/500;if(pr(x)>pr(bp))bp=x}return{bp,pr,dem:x=>D0*Math.pow(x/p0,-el),fr:el>1?c*el/(el-1):p0}}
+function bars(rows){$('chart').innerHTML=rows.map(r=>{const m=Math.max(r[1],r[2],1e-9);return '<div class="row"><span>'+r[0]+'</span><div class="pair"><div class="t"><div class="f a" style="width:'+r[1]/m*100+'%"></div></div><div class="t"><div class="f b" style="width:'+r[2]/m*100+'%"></div></div></div><span style="text-align:right">'+r[3](r[1])+' → '+r[3](r[2])+'</span></div>'}).join('')}
+function kp(a){$('kpi').innerHTML=a.map(x=>'<div><span>'+x[0]+'</span><strong class="'+(x[2]||'')+'">'+x[1]+'</strong></div>').join('')}
+function acts(a){$('acts').innerHTML=a.concat([CFG.tip]).map(t=>'<li>'+t+'</li>').join('')}
+function run(){const p=+$('s1').value,n=f0;
+ if(E=='A'){$('v1').textContent=n(V[6]*p/100)+' reviews';const{b,s}=A(V,V[6]*p/100),h=CFG.hi;
+  kp([['Cost, no human review','₹'+n(s.c)],['Cost, recommended','₹'+n(b.c)],['Saving',pc(s.c,b.c).replace('-','')+'','pos'],['Human reviews',n(b.rv)],['Wrong decisions',n(s.w)+' → '+n(b.w)]]);
+  bars([['Auto-'+h[0],s.hi,b.hi,n],['Auto-'+h[1],s.lo,b.lo,n],['Human review',s.rv,b.rv,n],['Wrong decisions',s.w,b.w,n],['Total cost ₹',s.c,b.c,n]]);
+  acts(['Set cut-offs at <b>'+f2(b.tl)+'</b> (low) and <b>'+f2(b.th)+'</b> (high): auto-'+h[0]+' about <b>'+n(b.hi)+'</b>, auto-'+h[1]+' about <b>'+n(b.lo)+'</b>, send <b>'+n(b.rv)+'</b> ('+(b.rv/V[0]*100).toFixed(1)+'%) to a person.','Wrong decisions drop from '+n(s.w)+' to '+n(b.w)+' versus a single cut-off with no review.',b.rv>=V[6]*p/100*.98?'Review capacity is the binding limit: each extra reviewer here still saves money until the optimizer’s best capacity.':'Review capacity is not binding; the band is set by cost, not headcount.','Track wrong-decision rates by group every month and re-fit d′ from real outcomes.'])}
+ if(E=='B'){$('v1').textContent='₹'+n(V[6]*p/100)+'/mo';const r=B(V,V[6]*p/100),b=r.b;
+  if(!b){kp([['Status','Loss tolerance too tight']]);bars([]);acts(['Raise the loss tolerance or lower the AI error rate.']);return}
+  kp([['All-human cost','₹'+n(r.allH)],['Recommended cost','₹'+n(b.c)],['Saving',pc(r.allH,b.c).replace('-',''),'pos'],['AI authority cap','₹'+n(b.L)],['Handled by AI',(b.sh*100).toFixed(0)+'%'],['Expected loss','₹'+n(b.loss)]]);
+  bars([['Monthly cost ₹',r.allH,b.c,n],['Expected loss ₹',r.lossA,b.loss,n],['Items a human sees',V[0],V[0]*(1-b.sh),n]]);
+  acts(['Let the AI decide alone only up to <b>₹'+n(b.L)+'</b>; anything above goes to a person. That covers about <b>'+(b.sh*100).toFixed(0)+'%</b> of items.','Fully autonomous AI would cost ₹'+n(r.allA)+' including ₹'+n(r.lossA)+' of error loss; the cap cuts loss to ₹'+n(b.loss)+'.','Review the cap quarterly against the actual AI error rate by amount band, and log every override.'])}
+ if(E=='C'){const sh=+$('s2').value/100,Bd=CFG.bud*p/100;$('v1').textContent=f0(Bd)+' '+(CFG.unit||'');$('v2').textContent=Math.round(sh*100)+'%';const r=C(Bd,sh),x=r.x;
+  kp([['Value, equal split',n(r.Q)],['Value, recommended',n(r.T)],['Uplift','+'+pc(r.T,r.Q),'pos'],['Net of cost',n(r.T-CFG.uc*Bd)]]);
+  bars(O.map((o,i)=>[o[0],Bd/O.length,x[i],v=>v.toFixed(1)]));
+  const up=O.map((o,i)=>[o[0],x[i]/(Bd/O.length)-1]).sort((a,b)=>b[1]-a[1]);
+  acts(['Put more into <b>'+up[0][0]+'</b> ('+(up[0][1]*100>=0?'+':'')+Math.round(up[0][1]*100)+'% vs equal split); it still returns the most on the next unit.','Cut back <b>'+up[up.length-1][0]+'</b> ('+Math.round(up[up.length-1][1]*100)+'%); it saturates first.','Re-fit ceiling and scale from real history before committing the budget.'])}
+ if(E=='D'){$('v1').textContent='±'+p+'%';const r=D(V,p),p0=V[1];
+  kp([['Price','₹'+f2(r.bp)],['Demand',n(r.dem(r.bp))],['Profit','₹'+n(r.pr(r.bp))],['vs reference price',pc(r.pr(r.bp),r.pr(p0)),'pos'],['Unconstrained price','₹'+f2(r.fr)]]);
+  bars([['Price ₹',p0,r.bp,f2],['Demand',r.dem(p0),r.dem(r.bp),n],['Profit ₹',r.pr(p0),r.pr(r.bp),n]]);
+  acts(['Price within ±'+p+'% of the reference: best price is <b>₹'+f2(r.bp)+'</b>. Show every customer a price inside this band for the same item.','Ignoring fairness, the profit-maximising price would be ₹'+f2(r.fr)+' (profit ₹'+n(r.pr(r.fr))+'); the band gives up '+(100-r.pr(r.bp)/r.pr(r.fr)*100).toFixed(1)+'% of that.','Do not use sensitive proxies for personalisation; audit price gaps by group monthly.'])}}
+function table(){const n=E=='A'||E=='B'?6:4,L=E=='A'?AL(CFG.hi):E=='B'?BL:DL;
+ if(E=='C'){$('tbl').innerHTML='<tr><th>Option</th><th>Ceiling</th><th>Scale</th><th>Value / unit</th></tr>'+O.map((o,i)=>'<tr><td>'+o[0]+'</td>'+[1,2,3].map(j=>'<td><input type="number" step="any" min="0.01" data-i="'+i+'" data-j="'+j+'" value="'+o[j]+'"></td>').join('')+'</tr>').join('')}
+ else $('tbl').innerHTML='<tr><th>Parameter</th><th>Value</th></tr>'+L.map((l,i)=>'<tr><td>'+l+'</td><td><input type="number" step="any" data-i="'+i+'" value="'+V[i]+'"></td></tr>').join('');
+ $('tbl').oninput=e=>{const t=e.target,v=parseFloat(t.value);if(!(v>=0))return;if(E=='C')O[t.dataset.i][t.dataset.j]=v;else V[t.dataset.i]=v;run();OPT(false)}}
+function OPT(ap){let r,m=-1e30,bp=0,txt='';
+ if(E=='A'){let b=null;for(let p=10;p<=200;p+=10){const q=A(V,V[6]*p/100).b;if(!b||q.c<b.c-1e-6){b=q;bp=p}}txt='Best human-review capacity: <b>'+f0(V[6]*bp/100)+' reviews/month</b> (cost ₹'+f0(b.c)+'). Beyond this, extra reviewers cost more than the errors they prevent.'}
+ if(E=='B'){let b=null;for(let p=10;p<=300;p+=10){const q=B(V,V[6]*p/100).b;if(q&&(!b||q.c<b.c-1e-6)){b=q;bp=p}}txt=b?'Lowest-cost AI authority cap: <b>₹'+f0(b.L)+'</b>, needing a loss tolerance of ~₹'+f0(V[6]*bp/100)+'/month. Total cost ₹'+f0(b.c)+'.':'No feasible cap at these error rates.'}
+ if(E=='C'){const sh=+$('s2').value/100;for(let p=50;p<=200;p+=5){const Bd=CFG.bud*p/100,net=C(Bd,sh).T-CFG.uc*Bd;if(net>m){m=net;bp=p}}txt='Best total budget: <b>'+bp+'% of today ('+f0(CFG.bud*bp/100)+' '+(CFG.unit||'')+')</b>. Above this the next unit earns less than it costs.'}
+ if(E=='D'){const mx=D(V,40).pr(D(V,40).bp);for(let g=0;g<=40;g++){if(D(V,g).pr(D(V,g).bp)>=mx*.97){bp=g;break}}txt='Smallest fairness band keeping 97% of the best possible profit: <b>±'+bp+'%</b>. Wider bands add little profit but more price inequality.'}
+ $('optout').innerHTML=txt;if(ap){$('s1').value=bp;run()}}
+table();$('s1').oninput=run;$('s2').oninput=run;$('optbtn').onclick=()=>OPT(true);run();OPT(false);
+</script></body></html>
